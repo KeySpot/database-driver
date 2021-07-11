@@ -1,0 +1,33 @@
+{
+    "userRecords": {
+        "bsonType": "object",
+        "required": ["sub"],
+        "additionalProperties": false,
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            },
+            "sub": {
+                "bsonType": "string"
+            },
+            "records": {
+                "bsonType": "object",
+                "maxProperties": 1024,
+                "additionalProperties": false,
+                "patternProperties": {
+                    "^[a-zA-Z0-9-_][a-zA-Z0-9-_ ]{0,126}[a-zA-Z0-9-_]$": {
+                        "bsonType": "object",
+                        "additionalProperties": false,
+                        "maxProperties": 16384,
+                        "patternProperties": {
+                            "^[a-zA-Z0-9-_][a-zA-Z0-9-_ ]{0,126}[a-zA-Z0-9-_]$": {
+                                "bsonType": "string",
+                                "maxLength": 1024
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
