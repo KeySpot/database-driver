@@ -1,0 +1,27 @@
+{
+  "name": "@keyspot/database-driver",
+  "version": "1.0.0",
+  "description": "Database driver microservice for storing user key data",
+  "main": "server.js",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KeySpot/database-driver.git"
+  },
+  "author": "Carl Schader",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KeySpot/database-driver/issues"
+  },
+  "homepage": "https://github.com/KeySpot/database-driver#readme",
+  "devDependencies": {
+    "@plandid/docker-scripts": "^2.0.2",
+    "commit-testing": "^1.4.0",
+    "jest": "^27.0.6"
+  },
+  "dependencies": {
+    "mongodb": "^3.6.10"
+  }
+}
