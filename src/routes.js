@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-router.use('/records/:sub', require('./routes/records'));
+router.use('/records', require('./routes/records'));
+// router.use('/accounts', require('./routes/accounts'));
 
 module.exports = router;

@@ -27,7 +27,7 @@
             }
         }
     },
-    "encryption": {
+    "accounts": {
         "bsonType": "object",
         "required": ["sub", "encryptedKey"],
         "additionalProperties": false,
