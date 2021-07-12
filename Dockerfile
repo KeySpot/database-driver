@@ -8,4 +8,4 @@ COPY --chown=node:node ./ ./
 
 RUN npm install --only=prod
 
-CMD ["npm", "run", "start"]
+CMD ["NODE_ENV=production", "npm", "run", "start"]

@@ -1,9 +1,10 @@
-require("dotenv").config();
+require('dotenv').config();
 
-const express = require("express");
-const https = require("https");
-const http = require("http");
-const fs = require("fs");
+const express = require('express');
+const compression = require('compression');
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
 const { connect } = require('@plandid/mongo-utils');
 
 (async function() {
@@ -11,17 +12,17 @@ const { connect } = require('@plandid/mongo-utils');
 
     const app = express();
 
+    app.use(compression());
     app.use(express.json());
-    app.use(express.urlencoded({extended: false}));
 
-    app.get("/", function(req, res) {
+    app.get('/', async function(req, res) {
         res.status(200).send();
     });
 
-    app.use(require("./routes"));
+    app.use(require('./routes'));
 
-    app.use("*", function(req, res) {
-        res.status(404).json({error: "no route found"});
+    app.use('*', async function(req, res) {
+        res.status(404).json({error: 'no route found'});
     });
         
     if (process.env.HTTPS_PORT && process.env.SSL_CERTIFICATE_PATH && process.env.SSL_KEY_PATH) {

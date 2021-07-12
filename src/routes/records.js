@@ -1,22 +1,67 @@
 const express = require('express');
 const { getdb } = require('@plandid/mongo-utils');
 
-const db = getdb();
+const col = getdb().collection('records');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.get('/:sub', async function(req, res, next) {
+router
+
+router.get('/:recordName', async function(req, res, next) {
     try {
-        const data = await db.collection("userRecords")
-        .find({ sub: req.params.sub })
-        .project({ _id: 0, records: 1 })
+        const data = await col
+        .find({ sub: req.params.sub, name: req.params.recordName })
+        .limit(1)
+        .project({ _id: 0, record: 1 })
         .next();
-        res.json(data.records);
+        res.json(data ? data.record: null);
     } catch (error) {
         next(error);
     }
 });
 
-router.put()
+router.patch('/:recordName', async function(req, res, next) {
+    try {
+        let setQuery = {};
+        Object.entries(req.body).map(function(kvp) {
+            setQuery[`record.${kvp[0]}`] = kvp[1];
+        });
+        await col
+        .updateOne(
+            { sub: req.params.sub, name: req.params.recordName }, 
+            { $set: setQuery },
+            { upsert: true }
+        );
+        res.sendStatus(200);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.put('/:recordName', async function(req, res, next) {
+    try {
+        await col
+        .updateOne(
+            { sub: req.params.sub, name: req.params.recordName }, 
+            { $set: { record: req.body } },
+            { upsert: true }
+        );
+        res.sendStatus(200);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.delete('/:recordName', async function(req, res, next) {
+    try {
+        await col
+        .deleteOne(
+            { sub: req.params.sub, name: req.params.recordName }
+        );
+        res.sendStatus(200);
+    } catch (error) {
+        next(error);
+    }
+});
 
 module.exports = router;

@@ -26,5 +26,21 @@
                 }
             }
         }
+    },
+    "encryption": {
+        "bsonType": "object",
+        "required": ["sub", "encryptedKey"],
+        "additionalProperties": false,
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            },
+            "sub": {
+                "bsonType": "string"
+            },
+            "encryptedKey": {
+                "bsonType": "string"
+            }
+        }
     }
 }
