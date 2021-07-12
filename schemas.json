@@ -1,7 +1,7 @@
 {
-    "userRecords": {
+    "records": {
         "bsonType": "object",
-        "required": ["sub"],
+        "required": ["sub", "name"],
         "additionalProperties": false,
         "properties": {
             "_id": {
@@ -10,21 +10,18 @@
             "sub": {
                 "bsonType": "string"
             },
-            "records": {
+            "name": {
+                "bsonType": "string",
+                "maxLength": 128
+            },
+            "record": {
                 "bsonType": "object",
                 "maxProperties": 1024,
                 "additionalProperties": false,
                 "patternProperties": {
                     "^[a-zA-Z0-9-_][a-zA-Z0-9-_ ]{0,126}[a-zA-Z0-9-_]$": {
-                        "bsonType": "object",
-                        "additionalProperties": false,
-                        "maxProperties": 16384,
-                        "patternProperties": {
-                            "^[a-zA-Z0-9-_][a-zA-Z0-9-_ ]{0,126}[a-zA-Z0-9-_]$": {
-                                "bsonType": "string",
-                                "maxLength": 1024
-                            }
-                        }
+                        "bsonType": "string",
+                        "maxLength": 4096
                     }
                 }
             }

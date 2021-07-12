@@ -1,7 +1,7 @@
 {
-    "userRecords": [
+    "records": [
         {
-            "index": {"sub": 1},
+            "index": {"sub": 1, "name": 1},
             "options": {"unique": true}
         }
     ]
