@@ -1,6 +1,6 @@
 {
   "name": "database-driver",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Database driver microservice for storing user key data",
   "main": "src/server.js",
   "scripts": {
@@ -19,7 +19,6 @@
   "homepage": "https://github.com/KeySpot/database-driver#readme",
   "devDependencies": {
     "@plandid/docker-scripts": "^2.0.2",
-    "commit-testing": "^1.4.0",
     "jest": "^27.0.6"
   },
   "dependencies": {
@@ -27,6 +26,7 @@
     "compression": "^1.7.4",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
     "mongodb": "^3.6.10"
   }
 }
