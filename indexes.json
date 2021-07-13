@@ -4,11 +4,5 @@
             "index": {"sub": 1, "name": 1},
             "options": {"unique": true}
         }
-    ],
-    "encryption": [
-        {
-            "index": {"sub": 1, "encryptedKey": 1},
-            "options": {"unique": true}
-        }
     ]
 }
