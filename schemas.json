@@ -1,7 +1,7 @@
 {
     "records": {
         "bsonType": "object",
-        "required": ["sub", "name"],
+        "required": ["sub", "name", "accessKey"],
         "additionalProperties": false,
         "properties": {
             "_id": {
@@ -24,22 +24,6 @@
                         "maxLength": 4096
                     }
                 }
-            }
-        }
-    },
-    "accounts": {
-        "bsonType": "object",
-        "required": ["sub", "encryptedKey"],
-        "additionalProperties": false,
-        "properties": {
-            "_id": {
-                "bsonType": "objectId"
-            },
-            "sub": {
-                "bsonType": "string"
-            },
-            "encryptedKey": {
-                "bsonType": "string"
             }
         }
     }
