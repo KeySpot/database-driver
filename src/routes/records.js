@@ -1,5 +1,6 @@
 const express = require('express');
 const { getdb } = require('@plandid/mongo-utils');
+const { ObjectID } = require('mongodb');
 
 const col = getdb().collection('records');
 
@@ -30,10 +31,26 @@ router.get('/count/:sub/', async function(req, res, next) {
     }
 });
 
-router.get('/:sub/:recordName', async function(req, res, next) {
+router.get('/accessKeys/:sub/', async function(req, res, next) {
     try {
         const data = await col
-        .find({ sub: req.params.sub, name: req.params.recordName })
+        .find({ sub: req.params.sub })
+        .project({ _id: 1, name: 1})
+        .toArray();
+        res.json(data);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/:sub/:recordName', async function(req, res, next) {
+    try {
+        let findQuery = { sub: req.params.sub, name: req.params.recordName };
+        if (req.query.accessKey) {
+            findQuery = { _id: new ObjectID(req.query.accessKey) };
+        } 
+        const data = await col
+        .find(findQuery)
         .limit(1)
         .next();
         res.json(data);
@@ -74,11 +91,11 @@ router.put('/:sub/:recordName', async function(req, res, next) {
     }
 });
 
-router.delete('/:sub/:recordName', async function(req, res, next) {
+router.delete('/:sub/:accessKey', async function(req, res, next) {
     try {
         await col
         .deleteOne(
-            { sub: req.params.sub, name: req.params.recordName }
+            { _id: new ObjectID(req.params.accessKey) , sub: req.params.sub }
         );
         res.sendStatus(200);
     } catch (error) {
