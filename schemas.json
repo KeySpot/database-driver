@@ -1,7 +1,7 @@
 {
     "records": {
         "bsonType": "object",
-        "required": ["sub", "name", "accessKey"],
+        "required": ["sub", "name"],
         "additionalProperties": false,
         "properties": {
             "_id": {
