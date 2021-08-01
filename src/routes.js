@@ -76,5 +76,6 @@ router.put('/:accessKey', async function(req, res, next) {
 });
 
 router.use('/records', jwtCheck, require('./routes/records'));
+router.use('/subscriptions', jwtCheck, require('./routes/subscriptions'));
 
 module.exports = router;

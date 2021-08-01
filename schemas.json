@@ -26,5 +26,22 @@
                 }
             }
         }
+    },
+    "subscriptions": {
+        "bsonType": "object",
+        "required": ["sub", "plan"],
+        "additionalProperties": false,
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            },
+            "sub": {
+                "bsonType": "string"
+            },
+            "plan": {
+                "bsonType": "string",
+                "enum": ["pro"]
+            }
+        }
     }
 }

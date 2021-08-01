@@ -22,7 +22,7 @@
     "jest": "^27.0.6"
   },
   "dependencies": {
-    "@plandid/mongo-utils": "^0.4.9",
+    "@plandid/mongo-utils": "^0.4.10",
     "compression": "^1.7.4",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
