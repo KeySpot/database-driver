@@ -6,11 +6,11 @@ const col = getdb().collection('subscriptions');
 
 const router = express.Router();
 
-router.put('/:sub/:plan', async function(req, res, next) {
+router.put('/', async function(req, res, next) {
     try {
         await col.updateOne(
-            { sub: req.params.sub },
-            { $set: { plan: req.params.plan } },
+            { sub: req.body.sub },
+            { $set: { plan: req.body.plan, customerId: req.body.customerId } },
             { upsert: true }
         );
         res.sendStatus(200);

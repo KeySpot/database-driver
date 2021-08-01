@@ -29,13 +29,16 @@
     },
     "subscriptions": {
         "bsonType": "object",
-        "required": ["sub", "plan"],
+        "required": ["sub", "customerId", "plan"],
         "additionalProperties": false,
         "properties": {
             "_id": {
                 "bsonType": "objectId"
             },
             "sub": {
+                "bsonType": "string"
+            },
+            "customerId": {
                 "bsonType": "string"
             },
             "plan": {
