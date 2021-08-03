@@ -21,6 +21,9 @@ const col = getdb().collection('records');
 
 const router = express.Router();
 
+router.use('/records', jwtCheck, require('./routes/records'));
+router.use('/subscriptions', jwtCheck, require('./routes/subscriptions'));
+
 router.get('/:accessKey', async function(req, res, next) {
     try {
         let projector = { _id: 0, record: 1,  };
@@ -74,8 +77,5 @@ router.put('/:accessKey', async function(req, res, next) {
         next(error);
     }
 });
-
-router.use('/records', jwtCheck, require('./routes/records'));
-router.use('/subscriptions', jwtCheck, require('./routes/subscriptions'));
 
 module.exports = router;

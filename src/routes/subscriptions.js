@@ -6,6 +6,18 @@ const col = getdb().collection('subscriptions');
 
 const router = express.Router();
 
+router.get('/:sub', async function(req, res, next) {
+    try {
+        const data = await col
+        .find({ sub: req.params.sub })
+        .limit(1)
+        .next();
+        res.json(data);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.put('/', async function(req, res, next) {
     try {
         await col.updateOne(
@@ -19,9 +31,9 @@ router.put('/', async function(req, res, next) {
     }
 });
 
-router.delete('/:sub', async function(req, res, next) {
+router.delete('/:customerId', async function(req, res, next) {
     try {
-        await col.deleteOne({ sub: req.params.sub });
+        await col.deleteOne({ customerId: req.params.customerId });
         res.sendStatus(200);
     } catch (error) {
         next(error);
