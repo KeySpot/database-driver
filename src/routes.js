@@ -10,10 +10,10 @@ const jwtCheck = jwt({
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 20,
-        jwksUri: process.env.JWKS_URI,
+        jwksUri: new URL('/.well-known/jwks.json', process.env.JWT_ISSUER).href,
     }),
-    audience: process.env.JWT_AUDIENCE,
-    issuer: process.env.JWT_ISSUER,
+    audience: process.env.AUTH0_AUDIENCE,
+    issuer: new URL('/', process.env.JWT_ISSUER).href,
     algorithms: ['RS256']
 });
 
