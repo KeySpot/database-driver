@@ -19,7 +19,7 @@
                 "maxProperties": 1024,
                 "additionalProperties": false,
                 "patternProperties": {
-                    "^[a-zA-Z0-9-_][a-zA-Z0-9-_ ]{0,126}[a-zA-Z0-9-_]$": {
+                    "^[^=]{1,128}$": {
                         "bsonType": "string",
                         "maxLength": 4096
                     }

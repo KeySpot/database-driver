@@ -1,6 +1,7 @@
 const express = require('express');
 const { getdb } = require('@plandid/mongo-utils');
 const { ObjectID } = require('mongodb');
+const { getPlan, recordCountReached, recordFull } = require('../subscriptionTools.js');
 
 const col = getdb().collection('records');
 
@@ -59,33 +60,46 @@ router.get('/:sub/:recordName', async function(req, res, next) {
     }
 });
 
-router.patch('/:sub/:recordName', async function(req, res, next) {
-    try {
-        let setQuery = {};
-        Object.entries(req.body).map(function(kvp) {
-            setQuery[`record.${kvp[0]}`] = kvp[1];
-        });
-        await col
-        .updateOne(
-            { sub: req.params.sub, name: req.params.recordName }, 
-            { $set: setQuery },
-            { upsert: true }
-        );
-        res.sendStatus(200);
-    } catch (error) {
-        next(error);
-    }
-});
+// Deprecated because we need to be able to check the size of the new record.
+// router.patch('/:sub/:recordName', async function(req, res, next) {
+//     try {
+//         let setQuery = {};
+//         Object.entries(req.body).map(function(kvp) {
+//             setQuery[`record.${kvp[0]}`] = kvp[1];
+//         });
+//         await col
+//         .updateOne(
+//             { sub: req.params.sub, name: req.params.recordName }, 
+//             { $set: setQuery },
+//             { upsert: true }
+//         );
+//         res.sendStatus(200);
+//     } catch (error) {
+//         next(error);
+//     }
+// });
 
 router.put('/:sub/:recordName', async function(req, res, next) {
     try {
+        const plan = await getPlan(req.sub);
+
+        if (await recordCountReached(req.params.sub, plan)) {
+            res.json({ message: 'Record count exceeded: Subscribe for more records' });
+            return;
+        }
+
+        if (await recordFull(req.body, plan)) {
+            res.json({ message: 'Record full: Subscribe for more secrets' });
+            return;
+        }
+
         await col
         .updateOne(
             { sub: req.params.sub, name: req.params.recordName }, 
             { $set: { record: req.body } },
             { upsert: true }
         );
-        res.sendStatus(200);
+        res.json({ message: 'Record updated' });
     } catch (error) {
         next(error);
     }
