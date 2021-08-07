@@ -4,7 +4,7 @@ const { ObjectID } = require('mongodb');
 const process = require('process');
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
-const { getPlan, recordFull } = require('./subscriptionTools.js');
+const { getPlan, recordViolatesPlan, getOwner } = require('./subscriptionTools.js');
 
 const jwtCheck = jwt({
     secret: jwks.expressJwtSecret({
@@ -65,9 +65,9 @@ router.get('/:accessKey', async function(req, res, next) {
 
 router.patch('/:accessKey', async function(req, res, next) {
     try {
-        const plan = await getPlan(req.sub);
+        const plan = await getPlan(await getOwner(req.params.accessKey));
 
-        if (await recordFull(req.body, plan)) {
+        if (await recordViolatesPlan(req.body, plan)) {
             res.json({ message: 'Record full: Subscribe for more secrets' });
             return;
         }

@@ -1,7 +1,7 @@
 const express = require('express');
 const { getdb } = require('@plandid/mongo-utils');
 const { ObjectID } = require('mongodb');
-const { getPlan, recordCountReached, recordFull } = require('../subscriptionTools.js');
+const { getPlan, recordCountReached, recordViolatesPlan } = require('../subscriptionTools.js');
 
 const col = getdb().collection('records');
 
@@ -81,14 +81,14 @@ router.get('/:sub/:recordName', async function(req, res, next) {
 
 router.put('/:sub/:recordName', async function(req, res, next) {
     try {
-        const plan = await getPlan(req.sub);
+        const plan = await getPlan(req.params.sub);
 
         if (await recordCountReached(req.params.sub, plan)) {
             res.json({ message: 'Record count exceeded: Subscribe for more records' });
             return;
         }
 
-        if (await recordFull(req.body, plan)) {
+        if (await recordViolatesPlan(req.body, plan)) {
             res.json({ message: 'Record full: Subscribe for more secrets' });
             return;
         }

@@ -1,9 +1,19 @@
 const { getdb } = require('@plandid/mongo-utils');
 const { ObjectId } = require('mongodb');
-const db = getdb();
 const fs = require('fs');
+const db = getdb();
 
 const plans = JSON.parse(fs.readFileSync('plans.json'));
+
+async function getOwner(accessKey) {
+    const record = await db.collection('records')
+    .find({ _id: new ObjectId(accessKey) })
+    .limit(1)
+    .project({ _id: 0, sub: 1 })
+    .next();
+    
+    return record.sub;
+}
 
 async function getPlan(sub) {
     const subscription = await db.collection('subscriptions')
@@ -11,13 +21,13 @@ async function getPlan(sub) {
     .project({ _id: 0, plan: 1 })
     .limit(1)
     .next();
+
     return subscription ? subscription.plan : 'free';
 }
 
-async function recordFull(record, planName) {
+async function recordViolatesPlan(record, planName) {
     const plan = plans[planName];
-    console.log(`secret count violated: ${Boolean(plan.secretsPerRecord && Object.keys(record).length >= plan.secretsPerRecord)}`)
-    return Boolean(plan.secretsPerRecord && Object.keys(record).length >= plan.secretsPerRecord);
+    return Boolean(plan.secretsPerRecord && Object.keys(record).length > plan.secretsPerRecord);
 }
 
 async function recordCountReached(sub, planName) {
@@ -26,12 +36,12 @@ async function recordCountReached(sub, planName) {
     .count();
 
     const plan = plans[planName];
-    console.log(`record count violated: ${Boolean(plan.records && recordCount >= plan.records)}`)
     return Boolean(plan.records && recordCount >= plan.records);
 }
 
 module.exports = {
+    getOwner: getOwner,
     getPlan, getPlan,
-    recordFull: recordFull,
+    recordViolatesPlan: recordViolatesPlan,
     recordCountReached: recordCountReached,
 };
