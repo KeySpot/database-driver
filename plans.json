@@ -1,7 +1,7 @@
 {
     "free": {
-        "secretsPerRecord": 20,
-        "records": 20
+        "secretsPerRecord": null,
+        "records": null
     },
     "pro": {
         "secretsPerRecord": null,
