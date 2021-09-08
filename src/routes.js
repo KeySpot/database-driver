@@ -1,29 +1,18 @@
 const express = require('express');
 const { getdb } = require('@plandid/mongo-utils');
 const { ObjectID } = require('mongodb');
-const process = require('process');
-const jwt = require('express-jwt');
-const jwks = require('jwks-rsa');
+const jwt = require('./jwt');
 const { getPlan, recordViolatesPlan, getOwner } = require('./subscriptionTools.js');
-
-const jwtCheck = jwt({
-    secret: jwks.expressJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 20,
-        jwksUri: new URL('/.well-known/jwks.json', process.env.JWT_ISSUER).href,
-    }),
-    audience: process.env.AUTH0_AUDIENCE,
-    issuer: new URL('/', process.env.JWT_ISSUER).href,
-    algorithms: ['RS256']
-});
 
 const col = getdb().collection('records');
 
 const router = express.Router();
 
-router.use('/records', jwtCheck, require('./routes/records'));
-router.use('/subscriptions', jwtCheck, require('./routes/subscriptions'));
+router.use('/records', jwt.auth0Check, require('./routes/records'));
+router.use('/subscriptions', jwt.auth0Check, require('./routes/subscriptions'));
+router.use('/tokens', jwt.auth0Check, require('./routes/tokens'));
+
+router.use('/user-records', jwt.userCheck, require('./routes/records'));
 
 router.get('/:accessKey', async function(req, res, next) {
     try {
@@ -42,26 +31,6 @@ router.get('/:accessKey', async function(req, res, next) {
         next(error);
     }
 });
-
-// Deprecated because we need to be able to check the size of the new record.
-// router.patch('/:accessKey', async function(req, res, next) {
-//     try {
-//         let setQuery = {};
-//         Object.entries(req.body).map(function(kvp) {
-//             setQuery[`record.${kvp[0]}`] = kvp[1];
-//         });
-
-//         await col
-//         .updateOne(
-//             { _id: new ObjectID(req.params.accessKey) }, 
-//             { $set: setQuery },
-//             { upsert: true }
-//         );
-//         res.sendStatus(200);
-//     } catch (error) {
-//         next(error);
-//     }
-// });
 
 router.patch('/:accessKey', async function(req, res, next) {
     try {
