@@ -42,7 +42,7 @@ function generateJwt(payload, secret) {
 }
 
 function signUserJwt(sub) {
-    return generateJwt({sub: sub, date: new Date().getTime()}, userSecret);
+    return generateJwt({sub: sub}, userSecret);
 }
 
 module.exports = {
